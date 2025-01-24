@@ -33,12 +33,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             BoxShadow(
               color: Color(0xFFFDB623).withOpacity(0.2),
               blurRadius: 8,
-              spreadRadius: 8,
+              spreadRadius: 6,
             ),
             BoxShadow(
-              color: Color(0xFFFDB623).withOpacity(0.5),
-              blurRadius: 40,
-              spreadRadius: 10,
+              color: Colors.yellow.shade800,
+              blurRadius: 50,
+              spreadRadius: 6,
             ),
           ],
         ),
@@ -50,7 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           },
           elevation: 0,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-          backgroundColor: const Color(0xFFFDB623),
+          backgroundColor:  Color.fromRGBO(253, 182, 35, .9),
           child: Image.asset(
             'assets/images/Group 10 (1).png',
             fit: BoxFit.cover,
@@ -82,7 +82,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         borderRadius: BorderRadius.circular(14),
         border: Border(
           bottom: BorderSide(
-            color: const Color(0xFFFDB623),
+            color:  Color.fromRGBO(253, 182, 35, .9),
             width: 3.3,
             style: BorderStyle.solid,
           ),

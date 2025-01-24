@@ -16,10 +16,9 @@ class QrCodeShowScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: Container(
-        color: Colors.black45,
+        color:  Colors.grey.shade800,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 70),
           child: Column(
@@ -228,12 +227,12 @@ class QrCodeShowScreen extends StatelessWidget {
     final byteData = await img.toByteData(format: ImageByteFormat.png);
     final bytes = byteData!.buffer.asUint8List();
 
-    final result = await ImageGallerySaver.saveImage(
+    await ImageGallerySaver.saveImage(
       bytes,
       quality: 100,
       name: "my_qr_code",
     );
 
-    AppUtil.showToast("Image saved to gallery: $result");
+    AppUtil.showToast("Image saved to gallery:");
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qr_app/qr_generate_code_screen.dart';
 import 'package:qr_app/qr_generate_model.dart';
 
 class QrGenerateScreen extends StatelessWidget {
@@ -7,14 +8,14 @@ class QrGenerateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black87,
+      backgroundColor: Colors.grey.shade700,
       body: Padding(
-        padding: const EdgeInsets.only(top: 70, bottom: 155),
+        padding: const EdgeInsets.only(top: 70, bottom: 155,left: 10,right: 10),
         child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 30,
+                horizontal: 20,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -37,7 +38,7 @@ class QrGenerateScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(6)),
                       child: const Icon(
                         Icons.list_outlined,
-                        color: Colors.yellow,
+                        color: Color.fromRGBO(253, 182, 35, .9),
                         size: 26,
                       ),
                     ),
@@ -47,43 +48,71 @@ class QrGenerateScreen extends StatelessWidget {
             ),
             Expanded(
               child: GridView.builder(
-                  itemCount: QrGenerateModel.content.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3),
-                  itemBuilder: (context, index) {
-                    QrGenerateModel qrModel = QrGenerateModel.content[index];
-                    return Stack(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: QrGenerateModel.content.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                ),
+                itemBuilder: (context, index) {
+                  QrGenerateModel qrModel = QrGenerateModel.content[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => QrGenerateCodeScreen(qrModel: qrModel),
+                        ),
+                      );
+                    },
+                    child: Stack(
                       children: [
                         Container(
-                            margin: const EdgeInsets.all(28),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: Colors.black,
-                                border:
-                                    Border.all(color: Colors.yellow, width: 2)),
-                            alignment: Alignment.center,
-                            child: qrModel.icon),
-                        Container(
-                          margin: const EdgeInsets.only(
-                              bottom: 90, left: 36, right: 36, top: 20),
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          margin: const EdgeInsets.symmetric(horizontal: 18,vertical: 20),
                           decoration: BoxDecoration(
-                              color: Colors.yellow,
-                              borderRadius: BorderRadius.circular(2)),
-                          alignment: Alignment.center
-                          child: Text(
-                            qrModel.name,
-                            style: const TextStyle(
-                              fontFamily: 'NotoSerif',
-                              fontSize: 10,
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.black,
+                            border: Border.all(
+                              color: const Color.fromRGBO(253, 182, 35, .9),
+                              width: 2,
+                            ),
+                          ),
+                          alignment: Alignment.center,
+                          child: IconTheme(
+                            data: const IconThemeData(size: 30),
+                            child: qrModel.icon,
+                          ),
+                        ),
+
+                        Positioned(
+                          top: 10,
+                          left: 0,
+                          right: 0,
+                          child: Center(
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: const Color.fromRGBO(253, 182, 35, .9),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                qrModel.name,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontFamily: 'NotoSerif',
+                                  fontSize: 10,
+                                  color: Colors.black,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ],
-                    );
-                  }),
-            )
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),

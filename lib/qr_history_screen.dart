@@ -32,7 +32,8 @@ class _QrHistoryScreenState extends State<QrHistoryScreen> {
     getScanHistory();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.grey.shade800,
+
       body: Padding(
         padding: const EdgeInsets.only(top: 70, bottom: 155),
         child: Column(
@@ -58,7 +59,7 @@ class _QrHistoryScreenState extends State<QrHistoryScreen> {
                     child: Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                          color: Colors.yellow,
+                          color:Colors.yellow[800],
                           borderRadius: BorderRadius.circular(6)),
                       child: const Icon(
                         Icons.list_outlined,
@@ -88,14 +89,14 @@ class _QrHistoryScreenState extends State<QrHistoryScreen> {
                     child: Container(
                       height: size.height / 18,
                       decoration: BoxDecoration(
-                          color: Colors.yellow,
+                          color: Colors.yellow[800],
                           borderRadius: BorderRadius.circular(6)),
                       alignment: Alignment.center,
                       child: const Text(
                         'Scan',
                         style: TextStyle(
                           fontFamily: 'NotoSerif',
-                          color: Colors.red,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -116,7 +117,7 @@ class _QrHistoryScreenState extends State<QrHistoryScreen> {
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontFamily: 'NotoSerif',
-                          color: Colors.red,
+                          color: Colors.white,
                         ),
                       ),
                     ),
@@ -180,7 +181,7 @@ class _QrHistoryScreenState extends State<QrHistoryScreen> {
                                     height: 25,
                                     child: Text(
                                       barcode,
-                                      style: TextStyle(
+                                      style:const TextStyle(
                                         fontFamily: 'NotoSerif',
                                         color: Colors.white,
                                       ),
@@ -198,7 +199,7 @@ class _QrHistoryScreenState extends State<QrHistoryScreen> {
                                     },
                                     child: Icon(
                                       Icons.delete_forever,
-                                      color: Colors.yellow,
+                                      color: Colors.yellow[800],
                                     ),
                                   )
                                 ],

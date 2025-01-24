@@ -19,7 +19,7 @@ class QrResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      color: Colors.black45,
+      color: Colors.grey.shade800,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 70),
         child: Column(

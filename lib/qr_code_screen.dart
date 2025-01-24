@@ -2,9 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:qr_app/core/storage_helper.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:qr_app/qr_result_screen.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QrScannerScreen extends StatefulWidget {
   const QrScannerScreen({super.key});
@@ -13,7 +12,8 @@ class QrScannerScreen extends StatefulWidget {
   State<QrScannerScreen> createState() => _QrScannerScreenState();
 }
 
-class _QrScannerScreenState extends State<QrScannerScreen> {
+class _QrScannerScreenState extends State<QrScannerScreen>
+    with SingleTickerProviderStateMixin {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
   String? scannedData = "No Data";
@@ -21,11 +21,25 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
   bool isFlash = false;
   File? _imageFile;
 
+  late AnimationController animationController;
+  late Animation<double> animation;
+  double _currentZoomLevel = 1.0;
+
   @override
   void initState() {
     super.initState();
+
     requestCameraPermission();
+
+    animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    )..repeat(reverse: true);
+
+    animation = Tween<double>(begin: 0.0, end: 1.0)
+        .animate(CurvedAnimation(parent: animationController, curve: Curves.easeInCubic));
   }
+
   Future<void> requestCameraPermission() async {
     if (await Permission.camera.request().isGranted) {
       print("Camera permission granted");
@@ -48,11 +62,11 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
     }
   }
 
-
   Future<void> _scanQRCodeFromImage(File imageFile) async {
     try {
       setState(() {
         _changeScreen = true;
+        scannedData = "Scanned from Image";
       });
     } catch (e) {
       setState(() {
@@ -66,7 +80,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: _changeScreen
-          ? QrResultScreen(barcode: scannedData!)
+          ? QrResultScreen(barcode: scannedData ?? "No Data")
           : buildMainScreen(size),
     );
   }
@@ -78,11 +92,59 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
           key: qrKey,
           onQRViewCreated: _onQRViewCreated,
           overlay: QrScannerOverlayShape(
-            borderColor: Colors.yellow,
+            borderColor: Colors.yellow.shade800,
             borderRadius: 10,
             borderLength: 30,
             borderWidth: 10,
             cutOutSize: 250,
+          ),
+        ),
+        Positioned(
+          top: 70,
+          left: 49,
+          child: AnimatedBuilder(
+            animation: animation,
+            builder: (context, child) {
+              return Positioned(
+                top: 342 + animation.value * 162,
+                left: 72,
+                child: Container(
+                  width: 250,
+                  height: 2,
+                  color: Colors.yellow.shade800,
+                ),
+              );
+            },
+          ),
+        ),
+        Positioned(
+          bottom: 200,
+          left: 55,
+          right: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.remove, color: Colors.white),
+              Expanded(
+                child: Slider(
+                  value: _currentZoomLevel,
+                  min: 1.0,
+                  max: 10.0,
+                  divisions: 6,
+                  label: "${_currentZoomLevel.toStringAsFixed(1)}x",
+                  activeColor: Colors.yellow.shade800,
+                  inactiveColor: Colors.grey,
+                  onChanged: (value) async {
+                    setState(() {
+                      _currentZoomLevel = value;
+                    });
+                    if (controller != null) {
+                    }
+                  },
+                ),
+              ),
+              Icon(Icons.add, color: Colors.white),
+            ],
           ),
         ),
         Container(
@@ -120,7 +182,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                   child: Icon(
                     isFlash ? Icons.flash_on : Icons.flash_off,
                     size: 26,
-                    color: isFlash ? Colors.yellow : Colors.white,
+                    color: Colors.white,
                   ),
                 ),
                 GestureDetector(
@@ -144,12 +206,12 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((barCode) async {
-      if (!_changeScreen) {
+      // Only change screen if QR code is scanned and _changeScreen is false
+      if (!_changeScreen && barCode.code != null) {
         setState(() {
           scannedData = barCode.code;
           _changeScreen = true;
         });
-     await  StorageHelper.saveHistory(scannedData.toString());
       }
     });
     controller.resumeCamera();
@@ -159,7 +221,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
   @override
   void dispose() {
     super.dispose();
-
+    animationController.dispose();
     controller?.dispose();
   }
 }
