@@ -96,7 +96,7 @@ class _QrScannerScreenState extends State<QrScannerScreen>
             borderRadius: 10,
             borderLength: 30,
             borderWidth: 10,
-            cutOutSize: 250,
+            cutOutSize: 230,
           ),
         ),
         Positioned(
@@ -106,8 +106,9 @@ class _QrScannerScreenState extends State<QrScannerScreen>
             animation: animation,
             builder: (context, child) {
               return Positioned(
-                top: 342 + animation.value * 162,
-                left: 72,
+                top: 275 + animation.value * 148,
+                left: 45,
+                right: 45,
                 child: Container(
                   width: 250,
                   height: 2,
@@ -118,9 +119,9 @@ class _QrScannerScreenState extends State<QrScannerScreen>
           ),
         ),
         Positioned(
-          bottom: 200,
-          left: 55,
-          right: 60,
+          bottom: 140,
+          left: 40,
+          right: 40,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

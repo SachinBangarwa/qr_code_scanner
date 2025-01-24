@@ -25,8 +25,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       resizeToAvoidBottomInset: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
-        height: 75,
-        width: 75,
+        height: 70,
+        width: 70,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           boxShadow: [
@@ -72,11 +72,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       padding: const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 8),
       margin: EdgeInsets.only(
         bottom: size.height / 45,
-        left: size.width / 14,
-        right: size.width / 14,
+        left: size.width / 16,
+        right: size.width / 16,
       ),
       width: double.infinity,
-      height: size.height / 10,
+      height: size.height / 9.5,
       decoration: BoxDecoration(
         color: const Color(0xE82B2B2C),
         borderRadius: BorderRadius.circular(14),
@@ -102,14 +102,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Icon(
                   Icons.qr_code_2,
                   color: Colors.white,
-                  size: 34,
+                  size: 32,
                 ),
                 Text(
                   'Generate',
                   style: TextStyle(
                     fontFamily: 'NotoSerif',
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 14,
                   ),
                 )
               ],
@@ -126,14 +126,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Icon(
                   Icons.history_outlined,
                   color: Colors.white,
-                  size: 34,
+                  size: 32,
                 ),
                 Text(
                   'History',
                   style: TextStyle(
                     fontFamily: 'NotoSerif',
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 14,
                   ),
                 )
               ],
