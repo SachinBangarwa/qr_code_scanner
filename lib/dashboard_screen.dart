@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:qr_app/qr_code_screen.dart';
-import 'package:qr_app/qr_generate_screen.dart';
-import 'package:qr_app/qr_history_screen.dart';
+import 'package:qr_app/core/app_constant.dart';
+import 'package:qr_app/screen/qr_code_screen.dart';
+import 'package:qr_app/screen/qr_generate_screen.dart';
+import 'package:qr_app/screen/qr_history_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -13,56 +14,56 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _currentIndex = 0;
   final List<Widget> _screens = [
-     QrScannerScreen(),
-    QrHistoryScreen(),
-    QrGenerateScreen(),
+    const QrScannerScreen(),
+    const QrHistoryScreen(),
+    const QrGenerateScreen(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
-      resizeToAvoidBottomInset: false,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Container(
-        height: 70,
-        width: 70,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Color(0xFFFDB623).withOpacity(0.2),
-              blurRadius: 8,
-              spreadRadius: 6,
-            ),
-            BoxShadow(
-              color: Colors.yellow.shade800,
-              blurRadius: 50,
-              spreadRadius: 6,
-            ),
-          ],
-        ),
-        child: FloatingActionButton(
-          onPressed: () {
-            setState(() {
-              _currentIndex = 0;
-            });
-          },
-          elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-          backgroundColor:  Color.fromRGBO(253, 182, 35, .9),
-          child: Image.asset(
-            'assets/images/Group 10 (1).png',
-            fit: BoxFit.cover,
-            height: 38,
+        extendBody: true,
+        resizeToAvoidBottomInset: false,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: _floatingButton(),
+        bottomNavigationBar: _bottomBar(context),
+        body: IndexedStack(index: _currentIndex, children: _screens));
+  }
+
+  Widget _floatingButton() {
+    return Container(
+      height: 70,
+      width: 70,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: AppConstant.customYellow.withOpacity(0.2),
+            blurRadius: 8,
+            spreadRadius: 6,
           ),
+          BoxShadow(
+            color: AppConstant.customYellow,
+            blurRadius: 50,
+            spreadRadius: 6,
+          ),
+        ],
+      ),
+      child: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            _currentIndex = 0;
+          });
+        },
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+        backgroundColor: AppConstant.customYellow,
+        child: Image.asset(
+          'assets/images/Group 10 (1).png',
+          fit: BoxFit.cover,
+          height: 38,
         ),
       ),
-      bottomNavigationBar: _bottomBar(context),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens
-      )
     );
   }
 
@@ -82,7 +83,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         borderRadius: BorderRadius.circular(14),
         border: Border(
           bottom: BorderSide(
-            color:  Color.fromRGBO(253, 182, 35, .9),
+            color: AppConstant.customYellow,
             width: 3.3,
             style: BorderStyle.solid,
           ),
@@ -101,14 +102,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
               children: [
                 Icon(
                   Icons.qr_code_2,
-                  color: Colors.white,
+                  color: AppConstant.customWhite,
                   size: 32,
                 ),
                 Text(
                   'Generate',
                   style: TextStyle(
                     fontFamily: 'NotoSerif',
-                    color: Colors.white,
+                    color: AppConstant.customWhite,
                     fontSize: 14,
                   ),
                 )
@@ -122,17 +123,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
               });
             },
             child: Column(
-              children: const [
+              children: [
                 Icon(
                   Icons.history_outlined,
-                  color: Colors.white,
+                  color: AppConstant.customWhite,
                   size: 32,
                 ),
                 Text(
                   'History',
                   style: TextStyle(
                     fontFamily: 'NotoSerif',
-                    color: Colors.white,
+                    color: AppConstant.customWhite,
                     fontSize: 14,
                   ),
                 )

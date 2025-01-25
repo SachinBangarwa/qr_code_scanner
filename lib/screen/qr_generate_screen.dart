@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:qr_app/qr_generate_code_screen.dart';
-import 'package:qr_app/qr_generate_model.dart';
+import 'package:qr_app/core/app_constant.dart';
+import 'package:qr_app/screen/qr_generate_code_screen.dart';
+import '../model/qr_generate_model.dart';
 
 class QrGenerateScreen extends StatelessWidget {
   const QrGenerateScreen({super.key});
@@ -8,44 +9,13 @@ class QrGenerateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade700,
+      backgroundColor: AppConstant.customBGC,
       body: Padding(
-        padding: const EdgeInsets.only(top: 70, bottom: 155,left: 10,right: 10),
+        padding:
+            const EdgeInsets.only(top: 70, bottom: 155, left: 10, right: 10),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Generate QR',
-                    style: TextStyle(
-                      overflow: TextOverflow.ellipsis,
-                      fontFamily: 'NotoSerif',
-                      color: Colors.white,
-                      fontSize: 22,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(6)),
-                      child: const Icon(
-                        Icons.list_outlined,
-                        color: Color.fromRGBO(253, 182, 35, .9),
-                        size: 26,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildAppBar(),
             Expanded(
               child: GridView.builder(
                 shrinkWrap: true,
@@ -61,19 +31,21 @@ class QrGenerateScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => QrGenerateCodeScreen(qrModel: qrModel),
+                          builder: (context) =>
+                              QrGenerateCodeScreen(qrModel: qrModel),
                         ),
                       );
                     },
                     child: Stack(
                       children: [
                         Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 18,vertical: 20),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 18, vertical: 20),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(8),
-                            color: Colors.black,
+                            color: AppConstant.customBlack,
                             border: Border.all(
-                              color: const Color.fromRGBO(253, 182, 35, .9),
+                              color: AppConstant.customYellow,
                               width: 2,
                             ),
                           ),
@@ -83,16 +55,16 @@ class QrGenerateScreen extends StatelessWidget {
                             child: qrModel.icon,
                           ),
                         ),
-
                         Positioned(
                           top: 10,
                           left: 0,
                           right: 0,
                           child: Center(
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(
-                                color: const Color.fromRGBO(253, 182, 35, .9),
+                                color: AppConstant.customYellow,
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Text(
@@ -117,5 +89,41 @@ class QrGenerateScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Padding _buildAppBar() {
+    return Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Generate QR',
+                  style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
+                    fontFamily: 'NotoSerif',
+                    color: AppConstant.customWhite,
+                    fontSize: 22,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                        color: AppConstant.customBlack,
+                        borderRadius: BorderRadius.circular(6)),
+                    child: Icon(
+                      Icons.list_outlined,
+                      color: AppConstant.customYellow,
+                      size: 26,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
   }
 }

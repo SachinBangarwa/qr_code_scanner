@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:qr_app/qr_result_screen.dart';
+import 'package:qr_app/core/app_constant.dart';
+import 'package:qr_app/core/storage_helper.dart';
+import 'package:qr_app/screen/qr_result_screen.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QrScannerScreen extends StatefulWidget {
@@ -29,30 +31,40 @@ class _QrScannerScreenState extends State<QrScannerScreen>
   void initState() {
     super.initState();
 
-    requestCameraPermission();
+    _requestCameraPermission();
 
+    _animationControllerHandle();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      body: _changeScreen
+          ? QrResultScreen(barcode: scannedData ?? "No Data")
+          : _buildMainScreen(size),
+    );
+  }
+
+  void _animationControllerHandle() {
     animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
     )..repeat(reverse: true);
 
-    animation = Tween<double>(begin: 0.0, end: 1.0)
-        .animate(CurvedAnimation(parent: animationController, curve: Curves.easeInCubic));
+    animation = Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(parent: animationController, curve: Curves.slowMiddle));
   }
 
-  Future<void> requestCameraPermission() async {
-    if (await Permission.camera.request().isGranted) {
-      print("Camera permission granted");
-    } else {
-      print("Camera permission denied");
-    }
+  Future<void> _requestCameraPermission() async {
+    if (await Permission.camera.request().isGranted) {}
   }
 
   Future<void> _pickImageFromGallery() async {
-    controller?.stopCamera();
     await Permission.photos.request();
     if (await Permission.photos.isGranted) {
-      final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
         setState(() {
           _imageFile = File(pickedFile.path);
@@ -75,28 +87,19 @@ class _QrScannerScreenState extends State<QrScannerScreen>
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: _changeScreen
-          ? QrResultScreen(barcode: scannedData ?? "No Data")
-          : buildMainScreen(size),
-    );
-  }
-
-  Stack buildMainScreen(Size size) {
+  Stack _buildMainScreen(Size size) {
     return Stack(
       children: [
         QRView(
           key: qrKey,
           onQRViewCreated: _onQRViewCreated,
           overlay: QrScannerOverlayShape(
+            cutOutBottomOffset: 40,
             borderColor: Colors.yellow.shade800,
-            borderRadius: 10,
+            borderRadius: 8,
             borderLength: 30,
-            borderWidth: 10,
-            cutOutSize: 230,
+            borderWidth: 8,
+            cutOutSize: 220,
           ),
         ),
         Positioned(
@@ -106,26 +109,26 @@ class _QrScannerScreenState extends State<QrScannerScreen>
             animation: animation,
             builder: (context, child) {
               return Positioned(
-                top: 275 + animation.value * 148,
+                top: 240 + animation.value * 135,
                 left: 45,
                 right: 45,
                 child: Container(
                   width: 250,
                   height: 2,
-                  color: Colors.yellow.shade800,
+                  color: AppConstant.customYellow,
                 ),
               );
             },
           ),
         ),
         Positioned(
-          bottom: 140,
-          left: 40,
-          right: 40,
+          bottom: 175,
+          left: 45,
+          right: 45,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.remove, color: Colors.white),
+              Icon(Icons.remove, color: AppConstant.customWhite),
               Expanded(
                 child: Slider(
                   value: _currentZoomLevel,
@@ -133,18 +136,17 @@ class _QrScannerScreenState extends State<QrScannerScreen>
                   max: 10.0,
                   divisions: 6,
                   label: "${_currentZoomLevel.toStringAsFixed(1)}x",
-                  activeColor: Colors.yellow.shade800,
+                  activeColor: AppConstant.customYellow,
                   inactiveColor: Colors.grey,
                   onChanged: (value) async {
                     setState(() {
                       _currentZoomLevel = value;
                     });
-                    if (controller != null) {
-                    }
+                    if (controller != null) {}
                   },
                 ),
               ),
-              Icon(Icons.add, color: Colors.white),
+              Icon(Icons.add, color: AppConstant.customWhite),
             ],
           ),
         ),
@@ -167,9 +169,9 @@ class _QrScannerScreenState extends State<QrScannerScreen>
               children: [
                 GestureDetector(
                   onTap: _pickImageFromGallery,
-                  child: const Icon(
+                  child: Icon(
                     Icons.image_rounded,
-                    color: Colors.white,
+                    color: AppConstant.customWhite,
                     size: 26,
                   ),
                 ),
@@ -183,16 +185,16 @@ class _QrScannerScreenState extends State<QrScannerScreen>
                   child: Icon(
                     isFlash ? Icons.flash_on : Icons.flash_off,
                     size: 26,
-                    color: Colors.white,
+                    color: AppConstant.customWhite,
                   ),
                 ),
                 GestureDetector(
                   onTap: () {
                     controller?.flipCamera();
                   },
-                  child: const Icon(
+                  child: Icon(
                     Icons.camera_enhance,
-                    color: Colors.white,
+                    color: AppConstant.customWhite,
                     size: 26,
                   ),
                 ),
@@ -207,12 +209,13 @@ class _QrScannerScreenState extends State<QrScannerScreen>
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
     controller.scannedDataStream.listen((barCode) async {
-      // Only change screen if QR code is scanned and _changeScreen is false
       if (!_changeScreen && barCode.code != null) {
         setState(() {
           scannedData = barCode.code;
           _changeScreen = true;
         });
+        await StorageHelper.saveHistory(
+            scannedData!, barCode.format.formatName);
       }
     });
     controller.resumeCamera();
